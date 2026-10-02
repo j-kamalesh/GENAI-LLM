@@ -1,0 +1,39 @@
+// Soil Moisture Irrigation System
+// Sensor: Soil Moisture Hygrometer Detection Sensor (Analog)
+// Pump/Relay connected to pin 7
+
+const int moisturePin = A0;   // Analog output from sensor board
+const int pumpPin = 7;        // Relay or pump control pin
+
+int moistureValue = 0;
+int threshold = 500;          // Adjust after testing your soil
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(pumpPin, OUTPUT);
+  digitalWrite(pumpPin, LOW);   // Pump OFF at start
+}
+
+void loop() {
+
+  // Read moisture sensor
+  moistureValue = analogRead(moisturePin);
+
+  Serial.print("Moisture Value: ");
+  Serial.println(moistureValue);
+
+  // Soil is DRY → moisture value is LOW
+  if (moistureValue < threshold) {
+    digitalWrite(pumpPin, HIGH);   // Pump ON
+    Serial.println("Soil is DRY → Pump ON");
+  }
+  
+  // Soil is WET → moisture value is HIGH
+  else {
+    digitalWrite(pumpPin, LOW);    // Pump OFF
+    Serial.println("Soil is WET → Pump OFF");
+  }
+
+  delay(1000);
+}
